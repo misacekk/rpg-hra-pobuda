@@ -3,66 +3,59 @@ import java.util.*;
 public class Game {
 
     Scanner sc = new Scanner(System.in);
+    Random random = new Random();
 
-    // Postup metody: jméno → vytvoření postavy → staty → itemy → menu
     public void start() {
         System.out.println("Program začal.");
-        // 🎓 ZÁKLAD 6: načtení jména
         System.out.println("Zadej jméno:");
-        String name = "";
+        String name = sc.nextLine().trim();
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 
-        // TODO načti jméno (patří do 🎓 ZÁKLAD 6)
+        Character player = new Character(name);
+        player.generateStats();
 
-        /* 🎓 ZÁKLAD 3: úprava jména
-          - odstraň mezery na začátku a konci (trim())
-         - nastav první písmeno jako velké */
+        List<String> itemy = new ArrayList<>(Arrays.asList("Musil", "Borec", "Lektvar", "Eismann", "Megatron", "Optimus"));
 
-        // TODO uprav name (patří do 🎓 ZÁKLAD 6)
+        for (int i = 0; i < 3; i++) {
+            int nahodnyIndex = random.nextInt(itemy.size());
+            String vybranaVec = itemy.remove(nahodnyIndex);
+            player.addItem(vybranaVec);
+        }
 
-
-        // 🎓 ZÁKLAD 8: vytvoř hráče (vytvoř novou instanci Character se jménem hráče)
-        Character player = null;
-
-        // 🎓 ZÁKLAD 9: vygeneruj staty hráče (generateStats())
-
-        /* 🎓 ZÁKLAD 10: načti 3 itemy
-         hint: zkus použít for cyklus */
-
-
-        int choice = 5;
+        int choice;
         System.out.println();
 
-        // 🎓 ZÁKLAD 11: menu
         do {
             System.out.println("-------------------------------------------------------------------");
             System.out.println("1 - vypiš postavu");
             System.out.println("2 - souboj");
-
-            /* ⭐ BONUS 3: přidávání a odebrání itemů uživatelem pomocí menu - zde jen odkomentuj, více níže
-            System.out.println("3 - přidej item");
-            System.out.println("4 - odeber item"); */
-
+            System.out.println("3 - načtení itemu");
+            System.out.println("4 - odebráni itemu");
             System.out.println("5 - konec");
             System.out.println("-------------------------------------------------------------------");
-            // TODO načti volbu (patří do 🎓 ZÁKLAD 11)
-
+            System.out.println("Volba: ");
+            choice = sc.nextInt();
+            sc.nextLine();
 
             if (choice == 1) {
-                // TODO vypiš postavu (patří do 🎓 ZÁKLAD 11)
+                player.printInfo();
             }
 
             if (choice == 2) {
-                // TODO vytvoř nepřítele (Character) (patří do 🎓 ZÁKLAD 11)
-                // TODO zavolej fight() (patří do 🎓 ZÁKLAD 11)
+                Character enemy = new Character("BOSSOVSKÝMAJITELPEŇÁZÍ");
+                fight(player, enemy);
             }
 
-            // ⭐ BONUS 3:
             if (choice == 3) {
-                // TODO načti item a přidej ho (patří do ⭐ BONUS 3)
+                System.out.println("Načti item: ");
+                String item = sc.nextLine();
+                player.addItem(item);
             }
 
             if (choice == 4) {
-                // TODO načti index a odeber item (patří do ⭐ BONUS 3)
+                System.out.println("Načti index: ");
+                int index = sc.nextInt();
+                player.removeItem(index);
             }
 
             System.out.println();
@@ -71,43 +64,55 @@ public class Game {
         System.out.println("Program skončil.");
     }
 
-    /**
-     * 🎓 ZÁKLAD 12: metoda fight
-     *
-     * Metoda simuluje souboj mezi dvěma postavami.
-     * Postavy se střídají v útocích, dokud mají oba více než 0 HP.
-     *
-     * Průběh:
-     * - nejdříve útočí postava {@code a} na {@code b}
-     * - pokud {@code b} přežije, útočí zpět na {@code a}
-     *
-     * ⭐ BONUS 4:
-     * - kritický zásah (20% šance na vyšší poškození)
-     *
-     * ⭐ BONUS 5:
-     * - pokud má postava item "lektvar", může se vyléčit
-     *
-     * Na konci metoda vypíše vítěze.
-     *
-     * @param a první postava (začíná)
-     * @param b druhá postava
-     */
     public void fight(Character a, Character b) {
 
         System.out.println("Souboj začíná!");
+        System.out.println(a.getName() + " VS " + b.getName());
 
-        /* hint: zkus použít while cyklus
-         - cyklus běží dokud mají oba HP > 0
-         - a útočí na b  ( patří do 🎓 ZÁKLAD 12)*/
+        while (a.getHp() > 0 && b.getHp() > 0) {
 
-        // ⭐ BONUS 4: kritický zásah =  s pravděpodobností 20 % způsobí 3x vyšší poškození
+            int kritickyA = random.nextInt(5);
+            if (kritickyA == 1) {
+                int utokA = a.getAttack() * 3;
+                b.setHp(b.getHp() - utokA);
+            } else {
+                int utokA = a.getAttack();
+                b.setHp(b.getHp() - utokA);
+            }
+            if (b.getHp() <= 0) {
+                break;
+            }
 
-        // TODO kontrola jestli b žije (patří do 🎓 ZÁKLAD 12)
+            int kritickyB = random.nextInt(5);
+            if (kritickyB == 1) {
+                int utokB = b.getAttack() * 3;
+                a.setHp(a.getHp() - utokB);
+            } else {
+                int utokB = b.getAttack();
+                a.setHp(a.getHp() - utokB);
+            }
+            if (a.getHp() <= 0) {
+                break;
+            }
 
-        // ⭐ BONUS 5: pokud má hráč "lektvar", může se vyléčit (čili v poli item, položku s nazvem "lektvar")
+            for (String item : a.getInventory()) {
+                if (item.equals("Lektvar")) {
+                    a.setHp(a.getHp() + 20);
+                }
+            }
 
-        // TODO b útočí na a (patří do 🎓 ZÁKLAD 12)
+            for (String item : b.getInventory()) {
+                if (item.equals("Lektvar")) {
+                    b.setHp(b.getHp() + 20);
+                }
+            }
 
-        // TODO výpis vítěze (patří do 🎓 ZÁKLAD 12)
+        }
+        if (a.getHp() > 0) {
+            System.out.println("Vítěz je: " + a.getName());
+        } else {
+            System.out.println("Vítěz je: " + b.getName());
+        }
+
     }
 }

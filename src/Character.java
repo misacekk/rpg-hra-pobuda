@@ -1,43 +1,87 @@
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Character {
+    Random random = new Random();
 
-    /* 🎓 ZÁKLAD 1: vytvoř atributy
-     name (String)
-     hp (int)
-     attack (int)
-     inventory (ArrayList<String>) */
+    public void setRandom(Random random) {
+        this.random = random;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    // 🎓 ZÁKLAD 2: konstruktor
-    // nastav jméno a vytvoř prázdný inventář
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setInventory(ArrayList<String> inventory) {
+        this.inventory = inventory;
+    }
+
+    public ArrayList<String> getInventory(ArrayList<String> inventory) {
+        return inventory;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public ArrayList<String> getInventory() {
+        return inventory;
+    }
+
+    private String name;
+    private int hp;
+    private int attack;
+    private ArrayList<String> inventory = new ArrayList<>();
+
     public Character(String name) {
-
+        this.name = name;
     }
 
-    /*
-     * 🎓 ZÁKLAD 4:vygeneruje náhodné základní statistiky postavy.
-     * hp v rozsahu: 50–100
-     * attack v rozsahu: 5–20
-     * hint: zkus použít Random
-     */
     public void generateStats() {
-
+        hp = random.nextInt(50, 100);
+        attack = random.nextInt(5, 20);
     }
 
-    // 🎓 ZÁKLAD 2: přidání itemu do inventory
     public void addItem(String item) {
-
+        inventory.add(item);
     }
 
-    // ⭐ BONUS 2: odebrání itemu
     public void removeItem(int index) {
-        // hint: pozor na to, aby to nespadlo pokud nebude existovat
+        if (index >= 0 && index < inventory.size()) {
+            inventory.remove(index);
+        } else {
+            System.out.println("Chyba");
+        }
 
     }
 
-    // 🎓 ZÁKLAD 2: výpis postavy - jmeno, hp, attack (bez itemů))
     public void printInfo() {
-
-        // ⭐ BONUS 1:
-        // vypiš o inventář a to očíslovaně (1. item)
+        System.out.println("Name: " + this.name);
+        System.out.println("HP: " + this.hp);
+        System.out.println("Attack: " + this.attack);
+        System.out.println("Inventory: " + this.inventory);
+        for (int i = 0; i < this.inventory.size(); i++) {
+            System.out.println(i + ": " + this.inventory.get(i));
+        }
     }
 }
