@@ -43,6 +43,7 @@ public class Game {
 
             if (choice == 2) {
                 Character enemy = new Character("BOSSOVSKÝMAJITELPEŇÁZÍ");
+                enemy.generateStats();
                 fight(player, enemy);
             }
 
@@ -71,48 +72,61 @@ public class Game {
 
         while (a.getHp() > 0 && b.getHp() > 0) {
 
+            int utokA;
             int kritickyA = random.nextInt(5);
             if (kritickyA == 1) {
-                int utokA = a.getAttack() * 3;
-                b.setHp(b.getHp() - utokA);
+                utokA = a.getAttack() * 3;
+                System.out.print("KRITICKÝ ZÁSAH! ");
             } else {
-                int utokA = a.getAttack();
-                b.setHp(b.getHp() - utokA);
+                utokA = a.getAttack();
             }
+            b.setHp(b.getHp() - utokA);
+            System.out.println(a.getName() + " zasáhl za " + utokA + " damage. " + b.getName() + " zbývá " + b.getHp() + " HP.");
+
             if (b.getHp() <= 0) {
                 break;
             }
 
+            int utokB;
             int kritickyB = random.nextInt(5);
             if (kritickyB == 1) {
-                int utokB = b.getAttack() * 3;
-                a.setHp(a.getHp() - utokB);
+                utokB = b.getAttack() * 3;
+                System.out.print("KRITICKÝ ZÁSAH! ");
             } else {
-                int utokB = b.getAttack();
-                a.setHp(a.getHp() - utokB);
+                utokB = b.getAttack();
             }
+            a.setHp(a.getHp() - utokB);
+            System.out.println(b.getName() + " zasáhl za " + utokB + " damage. " + a.getName() + " zbývá " + a.getHp() + " HP.");
+
             if (a.getHp() <= 0) {
                 break;
             }
 
-            for (String item : a.getInventory()) {
-                if (item.equals("Lektvar")) {
+            Iterator<String> itA = a.getInventory().iterator();
+            while (itA.hasNext()) {
+                if (itA.next().equals("Lektvar")) {
                     a.setHp(a.getHp() + 20);
+                    itA.remove();
+                    System.out.println(a.getName() + " použil lektvar (+20 HP). Aktuální HP: " + a.getHp());
+                    break;
                 }
             }
 
-            for (String item : b.getInventory()) {
-                if (item.equals("Lektvar")) {
+            Iterator<String> itB = b.getInventory().iterator();
+            while (itB.hasNext()) {
+                if (itB.next().equals("Lektvar")) {
                     b.setHp(b.getHp() + 20);
+                    itB.remove();
+                    System.out.println(b.getName() + " použil lektvar (+20 HP). Aktuální HP: " + b.getHp());
+                    break;
                 }
             }
-
         }
+
         if (a.getHp() > 0) {
             System.out.println("Vítěz je: " + a.getName());
         } else {
             System.out.println("Vítěz je: " + b.getName());
         }
-
     }
 }

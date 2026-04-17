@@ -58,8 +58,8 @@ public class Character {
     }
 
     public void generateStats() {
-        hp = random.nextInt(50, 100);
-        attack = random.nextInt(5, 20);
+        hp = random.nextInt(50, 99);
+        attack = random.nextInt(5, 19);
     }
 
     public void addItem(String item) {
