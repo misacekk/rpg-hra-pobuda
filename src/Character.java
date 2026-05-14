@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class Character {
     Random random = new Random();
 
